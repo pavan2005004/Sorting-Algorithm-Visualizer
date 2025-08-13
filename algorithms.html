@@ -1,0 +1,177 @@
+<!-- algorithms.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting Algorithm Visualizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-white rounded-xl shadow-md p-4 mb-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-gray-800">Sorting Algorithm Visualizer</a>
+            <div class="space-x-4">
+                <a href="index.html" class="text-gray-600 hover:text-blue-500 font-semibold">Home</a>
+                <a href="visualizer.html" class="text-gray-600 hover:text-blue-500 font-semibold">Visualizer</a>
+                <a href="algorithms.html" class="text-blue-500 font-semibold">Algorithms</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="container mx-auto max-w-7xl flex-grow text-gray-800">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 tracking-tight leading-tight">Understanding Sorting Algorithms</h1>
+            <p class="mt-2 text-lg text-gray-500">A detailed look at the time and space complexity of each algorithm.</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Bubble Sort -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-700 mb-2">Bubble Sort</h2>
+                <div class="flex items-baseline space-x-4 mb-4">
+                    <p class="text-sm font-semibold text-gray-500">Time: <span class="text-gray-800">O(n^2)</span></p>
+                    <p class="text-sm font-semibold text-gray-500">Space: <span class="text-gray-800">O(1)</span></p>
+                </div>
+                <p class="text-gray-600">
+                    **How it works:** Bubble Sort repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order. It continues to make passes until no swaps are needed.
+                </p>
+                <p class="mt-4 text-gray-600">
+                    **Complexity Explained:** The two nested loops are the reason for its **$O(n^2)$** time complexity. The outer loop runs $n$ times, and for each of those runs, the inner loop also runs up to $n$ times.
+                </p>
+            </div>
+            
+            <!-- Selection Sort -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-700 mb-2">Selection Sort</h2>
+                <div class="flex items-baseline space-x-4 mb-4">
+                    <p class="text-sm font-semibold text-gray-500">Time: <span class="text-gray-800">O(n^2)</span></p>
+                    <p class="text-sm font-semibold text-gray-500">Space: <span class="text-gray-800">O(1)</span></p>
+                </div>
+                <p class="text-gray-600">
+                    **How it works:** This algorithm divides the input list into two parts: a sorted sublist and an unsorted sublist. It repeatedly finds the minimum element from the unsorted portion and moves it to the end of the sorted sublist.
+                </p>
+                <p class="mt-4 text-gray-600">
+                    **Complexity Explained:** Similar to Bubble Sort, Selection Sort also has **$O(n^2)$** time complexity due to its nested loops. However, it performs fewer swaps, which can be an advantage in certain scenarios.
+                </p>
+            </div>
+
+            <!-- Insertion Sort -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-700 mb-2">Insertion Sort</h2>
+                <div class="flex items-baseline space-x-4 mb-4">
+                    <p class="text-sm font-semibold text-gray-500">Time: <span class="text-gray-800">O(n^2)</span></p>
+                    <p class="text-sm font-semibold text-gray-500">Space: <span class="text-gray-800">O(1)</span></p>
+                </div>
+                <p class="text-gray-600">
+                    **How it works:** Insertion Sort builds the final sorted array one item at a time. It iterates through the input elements, taking each element and inserting it into its correct position in the already sorted part of the array.
+                </p>
+                <p class="mt-4 text-gray-600">
+                    **Complexity Explained:** This algorithm is also **$O(n^2)$** in the worst case (a reverse-sorted array). However, it is very efficient for small arrays or for arrays that are already nearly sorted, approaching $O(n)$ time complexity in its best case.
+                </p>
+            </div>
+
+            <!-- Quick Sort -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-700 mb-2">Quick Sort</h2>
+                <div class="flex items-baseline space-x-4 mb-4">
+                    <p class="text-sm font-semibold text-gray-500">Time: <span class="text-gray-800">O(n \log n)</span></p>
+                    <p class="text-sm font-semibold text-gray-500">Space: <span class="text-gray-800">O(\log n)</span></p>
+                </div>
+                <p class="text-gray-600">
+                    **How it works:** Quick Sort is a "divide and conquer" algorithm. It picks an element as a pivot and partitions the array around the pivot, placing smaller elements to the left and larger elements to the right. It then recursively applies the same process to the sub-arrays.
+                </p>
+                <p class="mt-4 text-gray-600">
+                    **Complexity Explained:** Because it divides the problem into smaller pieces, its average time complexity is a much more efficient **$O(n \log n)$**. The **$O(\log n)$** space complexity comes from the recursive call stack.
+                </p>
+            </div>
+
+            <!-- Merge Sort -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-700 mb-2">Merge Sort</h2>
+                <div class="flex items-baseline space-x-4 mb-4">
+                    <p class="text-sm font-semibold text-gray-500">Time: <span class="text-gray-800">O(n \log n)</span></p>
+                    <p class="text-sm font-semibold text-gray-500">Space: <span class="text-gray-800">O(n)</span></p>
+                </div>
+                <p class="text-gray-600">
+                    **How it works:** Merge Sort is another "divide and conquer" algorithm. It continuously divides the array into two halves until it has a number of individual elements. Then, it merges the halves back together in sorted order.
+                </p>
+                <p class="mt-4 text-gray-600">
+                    **Complexity Explained:** The **$O(n \log n)$** time complexity comes from the combination of dividing the array ($\log n$) and merging the elements back together ($n$). It has a space complexity of **$O(n)$** because it requires a temporary array to perform the merging.
+                </p>
+            </div>
+            
+            <!-- Heap Sort -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-700 mb-2">Heap Sort</h2>
+                <div class="flex items-baseline space-x-4 mb-4">
+                    <p class="text-sm font-semibold text-gray-500">Time: <span class="text-gray-800">O(n \log n)</span></p>
+                    <p class="text-sm font-semibold text-gray-500">Space: <span class="text-gray-800">O(1)</span></p>
+                </div>
+                <p class="text-gray-600">
+                    **How it works:** Heap Sort uses a binary heap data structure. It first builds a max heap from the input data, then repeatedly extracts the largest element and places it at the end of the array, shrinking the heap and restoring the heap property.
+                </p>
+                <p class="mt-4 text-gray-600">
+                    **Complexity Explained:** Building the initial heap takes $O(n)$ time, and extracting each of the $n$ elements takes $O(\log n)$ time. This results in a time complexity of **$O(n \log n)$**. It is a major advantage that it performs this sort in-place, giving it a space complexity of **$O(1)$**.
+                </p>
+            </div>
+
+            <!-- Gnome Sort -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-700 mb-2">Gnome Sort</h2>
+                <div class="flex items-baseline space-x-4 mb-4">
+                    <p class="text-sm font-semibold text-gray-500">Time: <span class="text-gray-800">O(n^2)</span></p>
+                    <p class="text-sm font-semibold text-gray-500">Space: <span class="text-gray-800">O(1)</span></p>
+                </div>
+                <p class="text-gray-600">
+                    **How it works:** Gnome Sort is a simple sorting algorithm inspired by a garden gnome. It iterates through the array, and if an element is smaller than the previous one, it swaps them and "walks back" to ensure the preceding elements are still sorted.
+                </p>
+                <p class="mt-4 text-gray-600">
+                    **Complexity Explained:** The "walking back" behavior in the worst case can lead to many comparisons and swaps, resulting in a time complexity of **$O(n^2)$**.
+                </p>
+            </div>
+            
+            <!-- Shaker Sort -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-700 mb-2">Shaker Sort</h2>
+                <div class="flex items-baseline space-x-4 mb-4">
+                    <p class="text-sm font-semibold text-gray-500">Time: <span class="text-gray-800">O(n^2)</span></p>
+                    <p class="text-sm font-semibold text-gray-500">Space: <span class="text-gray-800">O(1)</span></p>
+                </div>
+                <p class="text-gray-600">
+                    **How it works:** Shaker Sort (also known as Cocktail Sort) is a variation of Bubble Sort. It sorts by repeatedly traversing the list from left to right and then from right to left, swapping adjacent elements if they are in the wrong order.
+                </p>
+                <p class="mt-4 text-gray-600">
+                    **Complexity Explained:** Like Bubble Sort, Shaker Sort has a worst-case time complexity of **$O(n^2)$** because it still uses nested loops. It is slightly more efficient than Bubble Sort in some cases, but not asymptotically better.
+                </p>
+            </div>
+
+            <!-- Odd Even Sort -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-700 mb-2">Odd Even Sort</h2>
+                <div class="flex items-baseline space-x-4 mb-4">
+                    <p class="text-sm font-semibold text-gray-500">Time: <span class="text-gray-800">O(n^2)</span></p>
+                    <p class="text-sm font-semibold text-gray-500">Space: <span class="text-gray-800">O(1)</span></p>
+                </div>
+                <p class="text-gray-600">
+                    **How it works:** Odd-Even Sort is a parallel sorting algorithm. It works by repeatedly performing two phases: an "odd" phase where it sorts elements at odd indices with their right neighbor, and an "even" phase where it does the same for even indices.
+                </p>
+                <p class="mt-4 text-gray-600">
+                    **Complexity Explained:** In a sequential implementation (like this one), the algorithm requires multiple passes, each taking $O(n)$ time. This results in a time complexity of **$O(n^2)$**. Its primary benefit is in parallel computing, where it can be much faster.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="text-center mt-10 p-4 text-sm text-gray-500">
+        &copy; 2025 Sorting Visualizer. All Rights Reserved.
+    </footer>
+</body>
+</html>

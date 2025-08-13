@@ -1,0 +1,63 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting Algorithm Visualizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-white rounded-xl shadow-md p-4 mb-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-gray-800">Sorting Algorithm Visualizer</a>
+            <div class="space-x-4">
+                <a href="index.html" class="text-gray-600 hover:text-blue-500 font-semibold">Home</a>
+                <a href="visualizer.html" class="text-gray-600 hover:text-blue-500 font-semibold">Visualizer</a>
+                <a href="algorithms.html" class="text-gray-600 hover:text-blue-500 font-semibold">Algorithms</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto max-w-7xl flex-grow text-center">
+        <header class="mb-10">
+            <h1 class="text-4xl lg:text-6xl font-extrabold text-gray-800 tracking-tight leading-tight">Welcome to the Sorting Visualizer</h1>
+            <p class="mt-4 text-xl text-gray-500 max-w-2xl mx-auto">
+                This project demonstrates a fundamental concept in computer science by visualizing how different sorting algorithms work in real time.
+            </p>
+        </header>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
+            <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+                <h2 class="text-2xl font-bold text-gray-700 mb-4">Start Visualizing</h2>
+                <p class="text-gray-600">
+                    Jump straight into the interactive tool. Generate an array, pick an algorithm, and watch the sort happen step-by-step.
+                </p>
+                <a href="visualizer.html" class="mt-6 inline-block bg-blue-500 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-blue-600 transition duration-300">
+                    Go to Visualizer
+                </a>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+                <h2 class="text-2xl font-bold text-gray-700 mb-4">Learn the Algorithms</h2>
+                <p class="text-gray-600">
+                    Dive deeper into the theory. This page explains the time and space complexity of each algorithm.
+                </p>
+                <a href="algorithms.html" class="mt-6 inline-block bg-green-500 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-green-600 transition duration-300">
+                    Learn More
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="text-center mt-10 p-4 text-sm text-gray-500">
+        &copy; 2025 Sorting Visualizer. All Rights Reserved.
+    </footer>
+</body>
+</html>

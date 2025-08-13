@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting Algorithm Visualizer</title>
+    <!-- Use Tailwind CSS for a clean, modern, and responsive design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .bar-container { display: flex; align-items: flex-end; justify-content: center; width: 100%; height: 50vh; border-radius: 0.5rem; padding: 1rem; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06); background-color: #ffffff; margin-bottom: 2rem; overflow: hidden; }
+        .bar { background-color: #3b82f6; margin: 0 1px; width: 100%; transition: height 0.1s ease; }
+        .message-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; padding: 2rem; border-radius: 0.5rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); z-index: 1000; text-align: center; animation: fadeIn 0.3s ease-out; display: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -60%); } to { opacity: 1; transform: translate(-50%, -50%); } }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-white rounded-xl shadow-md p-4 mb-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-gray-800">Sorting Algorithm Visualizer</a>
+            <div class="space-x-4">
+                <a href="index.html" class="text-gray-600 hover:text-blue-500 font-semibold">Home</a>
+                <a href="visualizer.html" class="text-blue-500 font-semibold">Visualizer</a>
+                <a href="algorithms.html" class="text-gray-600 hover:text-blue-500 font-semibold">Algorithms</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto max-w-7xl flex-grow">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 tracking-tight leading-tight">Interactive Visualizer</h1>
+            <p class="mt-2 text-lg text-gray-500">Generate an array, choose an algorithm, and watch it sort!</p>
+        </header>
+        
+        <div id="visualizer" class="bar-container border border-gray-200"></div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 border border-gray-200">
+            <h2 class="text-xl md:text-2xl font-bold text-gray-700 mb-6 text-center">Controls</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <div class="flex flex-col">
+                    <label for="array-size" class="text-sm font-semibold text-gray-600 mb-2">Array Size</label>
+                    <input type="range" id="array-size" min="10" max="200" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    <span id="array-size-value" class="text-sm text-gray-500 mt-2 text-center">50 elements</span>
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="speed-range" class="text-sm font-semibold text-gray-600 mb-2">Visualization Speed</label>
+                    <input type="range" id="speed-range" min="1" max="100" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    <span id="speed-value" class="text-sm text-gray-500 mt-2 text-center">50 ms delay</span>
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="array-type-selector" class="text-sm font-semibold text-gray-600 mb-2">Array Type</label>
+                    <select id="array-type-selector" class="block w-full px-4 py-2 text-base text-gray-900 bg-gray-100 border border-gray-300 rounded-lg cursor-pointer focus:ring-blue-500 focus:border-blue-500">
+                        <option value="random">Random</option>
+                        <option value="sorted">Sorted</option>
+                        <option value="reversed">Reversed</option>
+                        <option value="nearly-sorted">Nearly Sorted</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="algorithm-selector" class="text-sm font-semibold text-gray-600 mb-2">Algorithm</label>
+                    <select id="algorithm-selector" class="block w-full px-4 py-2 text-base text-gray-900 bg-gray-100 border border-gray-300 rounded-lg cursor-pointer focus:ring-blue-500 focus:border-blue-500">
+                        <option value="bubbleSort">Bubble Sort</option>
+                        <option value="selectionSort">Selection Sort</option>
+                        <option value="insertionSort">Insertion Sort</option>
+                        <option value="quickSort">Quick Sort</option>
+                        <option value="mergeSort">Merge Sort</option>
+                        <option value="heapSort">Heap Sort</option>
+                        <option value="gnomeSort">Gnome Sort</option>
+                        <option value="shakerSort">Shaker Sort</option>
+                        <option value="oddEvenSort">Odd Even Sort</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mt-8">
+                <label for="custom-array-input" class="text-sm font-semibold text-gray-600 mb-2 block">Or, Enter Your Own Numbers (comma separated)</label>
+                <input type="text" id="custom-array-input" placeholder="e.g., 4, 2, 7, 1, 9, 3" class="w-full px-4 py-2 text-base text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <div class="mt-8 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <button id="generate-array-btn" class="flex-1 px-6 py-3 bg-green-500 text-white font-bold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition duration-300">
+                    Generate New Array
+                </button>
+                <button id="start-sort-btn" class="flex-1 px-6 py-3 bg-blue-500 text-white font-bold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300">
+                    Start Sorting
+                </button>
+                 <button id="stop-sort-btn" class="hidden flex-1 px-6 py-3 bg-red-500 text-white font-bold rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 transition duration-300">
+                    Stop Sorting
+                </button>
+            </div>
+        </div>
+
+        <div id="stats-panel" class="bg-white rounded-xl shadow-lg p-6 md:p-8 mt-8 border border-gray-200 hidden">
+            <h2 class="text-xl md:text-2xl font-bold text-gray-700 mb-4 text-center">Algorithm Statistics</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 text-center">
+                <div class="flex flex-col items-center">
+                    <span class="text-xs font-semibold text-gray-500">Algorithm</span>
+                    <span id="stat-algorithm" class="mt-1 text-base font-bold text-blue-600"></span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-xs font-semibold text-gray-500">Time Complexity</span>
+                    <span id="stat-time-complexity" class="mt-1 text-base font-bold text-gray-800"></span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-xs font-semibold text-gray-500">Space Complexity</span>
+                    <span id="stat-space-complexity" class="mt-1 text-base font-bold text-gray-800"></span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-xs font-semibold text-gray-500">Comparisons</span>
+                    <span id="stat-comparisons" class="mt-1 text-base font-bold text-gray-800">0</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-xs font-semibold text-gray-500">Swaps</span>
+                    <span id="stat-swaps" class="mt-1 text-base font-bold text-gray-800">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="message-box" class="message-box">
+        <p id="message-content" class="text-gray-800"></p>
+        <button id="close-message-btn" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"> OK </button>
+    </div>
+    <footer class="text-center mt-10 p-4 text-sm text-gray-500"> &copy; 2025 Sorting Visualizer. All Rights Reserved.</footer>
+
+    <script>
+        (function() {
+            const visualizerContainer = document.getElementById('visualizer');
+            const generateBtn = document.getElementById('generate-array-btn');
+            const startBtn = document.getElementById('start-sort-btn');
+            const stopBtn = document.getElementById('stop-sort-btn');
+            const algorithmSelector = document.getElementById('algorithm-selector');
+            const arrayTypeSelector = document.getElementById('array-type-selector');
+            const customArrayInput = document.getElementById('custom-array-input');
+            const speedRange = document.getElementById('speed-range');
+            const speedValueSpan = document.getElementById('speed-value');
+            const arraySizeRange = document.getElementById('array-size');
+            const arraySizeValueSpan = document.getElementById('array-size-value');
+            const messageBox = document.getElementById('message-box');
+            const messageContent = document.getElementById('message-content');
+            const closeMessageBtn = document.getElementById('close-message-btn');
+            const statsPanel = document.getElementById('stats-panel');
+            const statAlgorithm = document.getElementById('stat-algorithm');
+            const statTimeComplexity = document.getElementById('stat-time-complexity');
+            const statSpaceComplexity = document.getElementById('stat-space-complexity');
+            const statComparisons = document.getElementById('stat-comparisons');
+            const statSwaps = document.getElementById('stat-swaps');
+            let array = [];
+            let isSorting = false;
+            let isStopped = false;
+            let currentDelay = 50;
+            let currentArraySize = 50;
+            let comparisons = 0;
+            let swaps = 0;
+            let startTime = 0;
+            let selectedAlgorithm = 'bubbleSort';
+
+            const algorithmData = {
+                bubbleSort: { name: 'Bubble Sort', time: 'O(n^2)', space: 'O(1)' },
+                selectionSort: { name: 'Selection Sort', time: 'O(n^2)', space: 'O(1)' },
+                insertionSort: { name: 'Insertion Sort', time: 'O(n^2)', space: 'O(1)' },
+                quickSort: { name: 'Quick Sort', time: 'O(n \\log n)', space: 'O(\\log n)' },
+                mergeSort: { name: 'Merge Sort', time: 'O(n \\log n)$', space: 'O(n)' },
+                heapSort: { name: 'Heap Sort', time: 'O(n \\log n)', space: 'O(1)' },
+                gnomeSort: { name: 'Gnome Sort', time: 'O(n^2)', space: 'O(1)' },
+                shakerSort: { name: 'Shaker Sort', time: 'O(n^2)', space: 'O(1)' },
+                oddEvenSort: { name: 'Odd Even Sort', time: 'O(n^2)', space: 'O(1)' }
+            };
+
+            generateBtn.addEventListener('click', () => {
+                if (!isSorting) { handleGenerateArray(); } else { showMessage("A sort is currently in progress. Please wait for it to finish."); }
+            });
+
+            startBtn.addEventListener('click', () => {
+                if (isSorting) { showMessage("A sort is already running."); return; }
+                selectedAlgorithm = algorithmSelector.value;
+                if (array.length === 0) { showMessage("Please generate an array first."); return; }
+                resetStats(selectedAlgorithm);
+                isSorting = true;
+                isStopped = false;
+                visualizerContainer.style.overflowX = 'auto';
+                startBtn.classList.add('hidden');
+                stopBtn.classList.remove('hidden');
+                generateBtn.disabled = true;
+                switch(selectedAlgorithm) {
+                    case 'bubbleSort': bubbleSort(); break;
+                    case 'selectionSort': selectionSort(); break;
+                    case 'insertionSort': insertionSort(); break;
+                    case 'quickSort': quickSort(0, array.length - 1); break;
+                    case 'mergeSort': mergeSort(0, array.length - 1); break;
+                    case 'heapSort': heapSort(); break;
+                    case 'gnomeSort': gnomeSort(); break;
+                    case 'shakerSort': shakerSort(); break;
+                    case 'oddEvenSort': oddEvenSort(); break;
+                }
+            });
+
+            stopBtn.addEventListener('click', () => { isStopped = true; resetButtons(); updateVisualization(); });
+            speedRange.addEventListener('input', (e) => {
+                currentDelay = 101 - e.target.value;
+                speedValueSpan.textContent = `${101 - currentDelay} ms delay`;
+            });
+            arraySizeRange.addEventListener('input', (e) => {
+                currentArraySize = e.target.value;
+                arraySizeValueSpan.textContent = `${currentArraySize} elements`;
+                if (!isSorting && customArrayInput.value === '') { handleGenerateArray(); }
+            });
+            customArrayInput.addEventListener('input', () => {
+                const isCustomInput = customArrayInput.value.trim() !== '';
+                arraySizeRange.disabled = isCustomInput;
+                arrayTypeSelector.disabled = isCustomInput;
+                generateBtn.textContent = isCustomInput ? 'Create Custom Array' : 'Generate New Array';
+            });
+            closeMessageBtn.addEventListener('click', () => { messageBox.style.display = 'none'; });
+
+            function showMessage(msg) { messageContent.textContent = msg; messageBox.style.display = 'block'; }
+            function resetButtons() {
+                isSorting = false;
+                startBtn.classList.remove('hidden');
+                stopBtn.classList.add('hidden');
+                generateBtn.disabled = false;
+            }
+            const sleep = (ms) => new Promise((resolve, reject) => {
+                const checkStop = () => {
+                    if (isStopped) { reject(new Error("Sort stopped by user")); } else { setTimeout(resolve, ms); }
+                };
+                checkStop();
+            });
+            function generateArrayAndVisualize(dataArray) {
+                array = [...dataArray];
+                const maxBarHeight = visualizerContainer.clientHeight * 0.9;
+                const minBarHeight = 10;
+                const arraySize = array.length;
+                const availableWidth = visualizerContainer.clientWidth - (arraySize * 2);
+                const barWidth = Math.floor(availableWidth / arraySize);
+                visualizerContainer.innerHTML = '';
+                const maxValue = Math.max(...array);
+                const scaleFactor = maxValue > 0 ? (maxBarHeight / maxValue) : 1;
+                for (let i = 0; i < arraySize; i++) {
+                    const value = array[i];
+                    const scaledValue = Math.max(minBarHeight, value * scaleFactor);
+                    const bar = document.createElement('div');
+                    bar.classList.add('bar', 'transition-all', 'duration-100');
+                    bar.style.height = `${scaledValue}px`;
+                    bar.style.width = `${barWidth}px`;
+                    bar.style.margin = `0 1px`;
+                    visualizerContainer.appendChild(bar);
+                }
+            }
+            function handleGenerateArray() {
+                const customInput = customArrayInput.value.trim();
+                let newArray = [];
+                if (customInput !== '') {
+                    const values = customInput.split(',').map(item => parseInt(item.trim(), 10));
+                    const validValues = values.filter(val => !isNaN(val) && val > 0);
+                    if (validValues.length === 0) { showMessage('Please enter valid positive numbers, separated by commas.'); return; }
+                    if (validValues.length > 200) { showMessage('The maximum number of elements is 200. Please reduce your list size.'); return; }
+                    newArray = validValues;
+                    currentArraySize = newArray.length;
+                } else {
+                    const arrayType = arrayTypeSelector.value;
+                    const maxBarHeight = visualizerContainer.clientHeight * 0.9;
+                    const minBarHeight = 10;
+                    for (let i = 0; i < currentArraySize; i++) {
+                        newArray.push(Math.floor(Math.random() * (maxBarHeight - minBarHeight)) + minBarHeight);
+                    }
+                    if (arrayType === 'sorted') { newArray.sort((a, b) => a - b); }
+                    else if (arrayType === 'reversed') { newArray.sort((a, b) => b - a); }
+                    else if (arrayType === 'nearly-sorted') {
+                        newArray.sort((a, b) => a - b);
+                        const numSwaps = Math.floor(currentArraySize * 0.05);
+                        for (let i = 0; i < numSwaps; i++) {
+                            const idx1 = Math.floor(Math.random() * currentArraySize);
+                            const idx2 = Math.floor(Math.random() * currentArraySize);
+                            [newArray[idx1], newArray[idx2]] = [newArray[idx2], newArray[idx1]];
+                        }
+                    }
+                }
+                generateArrayAndVisualize(newArray);
+            }
+            function updateVisualization(indicesToHighlight = [], color = '#3b82f6') {
+                const bars = visualizerContainer.children;
+                for (let i = 0; i < bars.length; i++) { bars[i].style.backgroundColor = '#3b82f6'; }
+                for (let index of indicesToHighlight) { if (bars[index]) { bars[index].style.backgroundColor = color; } }
+            }
+            function markSorted(index) { const bars = visualizerContainer.children; if (bars[index]) { bars[index].style.backgroundColor = '#10b981'; } }
+            function markAllSorted() { const bars = visualizerContainer.children; for (let i = 0; i < bars.length; i++) { bars[i].style.backgroundColor = '#10b981'; } }
+            async function swap(index1, index2) {
+                swaps++;
+                statSwaps.textContent = swaps;
+                const bars = visualizerContainer.children;
+                const tempHeight = bars[index1].style.height;
+                bars[index1].style.height = bars[index2].style.height;
+                bars[index2].style.height = tempHeight;
+                const tempValue = array[index1];
+                array[index1] = array[index2];
+                array[index2] = tempValue;
+                await sleep(currentDelay);
+            }
+            function finishSort() {
+                isSorting = false;
+                startBtn.disabled = false;
+                generateBtn.disabled = false;
+                markAllSorted();
+                visualizerContainer.style.overflowX = 'hidden';
+                const endTime = performance.now();
+                const totalTime = (endTime - startTime).toFixed(2);
+                statComparisons.textContent += ` (${totalTime} ms)`;
+                resetButtons();
+            }
+            function resetStats(algorithm) {
+                comparisons = 0;
+                swaps = 0;
+                startTime = performance.now();
+                const selectedData = algorithmData[algorithm];
+                statsPanel.classList.remove('hidden');
+                statAlgorithm.textContent = selectedData.name;
+                statTimeComplexity.textContent = selectedData.time;
+                statSpaceComplexity.textContent = selectedData.space;
+                statComparisons.textContent = '0';
+                statSwaps.textContent = '0';
+            }
+            async function bubbleSort() {
+                try {
+                    let swapped;
+                    do {
+                        swapped = false;
+                        for (let i = 0; i < array.length - 1; i++) {
+                            comparisons++;
+                            statComparisons.textContent = comparisons;
+                            updateVisualization([i, i + 1], '#ef4444');
+                            await sleep(currentDelay);
+                            if (array[i] > array[i + 1]) { await swap(i, i + 1); swapped = true; }
+                            updateVisualization();
+                        }
+                        markSorted(array.length - 1);
+                    } while (swapped);
+                    finishSort();
+                } catch (e) { console.error(e.message); }
+            }
+            async function selectionSort() {
+                try {
+                    for (let i = 0; i < array.length - 1; i++) {
+                        let minIndex = i;
+                        updateVisualization([i], '#f97316');
+                        for (let j = i + 1; j < array.length; j++) {
+                            comparisons++;
+                            statComparisons.textContent = comparisons;
+                            updateVisualization([i, j], '#ef4444');
+                            await sleep(currentDelay);
+                            if (array[j] < array[minIndex]) {
+                                if (minIndex !== i) { visualizerContainer.children[minIndex].style.backgroundColor = '#3b82f6'; }
+                                minIndex = j;
+                                visualizerContainer.children[minIndex].style.backgroundColor = '#f97316';
+                            }
+                        }
+                        if (minIndex !== i) { await swap(i, minIndex); }
+                        markSorted(i);
+                    }
+                    markSorted(array.length - 1);
+                    finishSort();
+                } catch (e) { console.error(e.message); }
+            }
+            async function insertionSort() {
+                try {
+                    for (let i = 1; i < array.length; i++) {
+                        let key = array[i];
+                        let j = i - 1;
+                        let bars = visualizerContainer.children;
+                        bars[i].style.backgroundColor = '#f97316';
+                        await sleep(currentDelay);
+                        while (j >= 0 && array[j] > key) {
+                            comparisons++;
+                            statComparisons.textContent = comparisons;
+                            updateVisualization([j, j+1], '#ef4444');
+                            await sleep(currentDelay);
+                            await swap(j, j+1);
+                            j = j - 1;
+                        }
+                        updateVisualization();
+                        markSorted(i);
+                    }
+                    finishSort();
+                } catch (e) { console.error(e.message); }
+            }
+            async function quickSort(low, high) {
+                try {
+                    if (low < high) {
+                        const partitionIndex = await partition(low, high);
+                        await quickSort(low, partitionIndex - 1);
+                        await quickSort(partitionIndex + 1, high);
+                    }
+                    if (low >= 0 && high < array.length) { markSorted(low); markSorted(high); }
+                    if (low === 0 && high === array.length - 1) { finishSort(); }
+                } catch (e) { console.error(e.message); }
+            }
+            async function partition(low, high) {
+                const bars = visualizerContainer.children;
+                const pivotIndex = high;
+                const pivotValue = array[pivotIndex];
+                bars[pivotIndex].style.backgroundColor = '#8b5cf6';
+                let i = low - 1;
+                for (let j = low; j < high; j++) {
+                    comparisons++;
+                    statComparisons.textContent = comparisons;
+                    bars[j].style.backgroundColor = '#ef4444';
+                    await sleep(currentDelay);
+                    if (array[j] < pivotValue) {
+                        i++;
+                        await swap(i, j);
+                        bars[i].style.backgroundColor = '#f97316';
+                        bars[j].style.backgroundColor = '#3b82f6';
+                    } else { bars[j].style.backgroundColor = '#3b82f6'; }
+                }
+                await swap(i + 1, high);
+                updateVisualization();
+                return i + 1;
+            }
+            async function mergeSort(left, right) {
+                try {
+                    if (left >= right) { return; }
+                    const mid = left + Math.floor((right - left) / 2);
+                    await mergeSort(left, mid);
+                    await mergeSort(mid + 1, right);
+                    await merge(left, mid, right);
+                } catch (e) { console.error(e.message); }
+            }
+            async function merge(left, mid, right) {
+                const bars = visualizerContainer.children;
+                for (let i = left; i <= right; i++) { bars[i].style.backgroundColor = '#8b5cf6'; }
+                await sleep(currentDelay * 2);
+                const n1 = mid - left + 1;
+                const n2 = right - mid;
+                const leftArray = new Array(n1);
+                const rightArray = new Array(n2);
+                for (let i = 0; i < n1; i++) { leftArray[i] = array[left + i]; }
+                for (let i = 0; i < n2; i++) { rightArray[i] = array[mid + 1 + i]; }
+                let i = 0;
+                let j = 0;
+                let k = left;
+                while (i < n1 && j < n2) {
+                    comparisons++;
+                    statComparisons.textContent = comparisons;
+                    if (leftArray[i] <= rightArray[j]) {
+                        bars[k].style.backgroundColor = '#ef4444';
+                        await sleep(currentDelay);
+                        array[k] = leftArray[i];
+                        bars[k].style.height = `${array[k]}px`;
+                        i++;
+                    } else {
+                        bars[k].style.backgroundColor = '#ef4444';
+                        await sleep(currentDelay);
+                        array[k] = rightArray[j];
+                        bars[k].style.height = `${array[k]}px`;
+                        j++;
+                    }
+                    bars[k].style.backgroundColor = '#3b82f6';
+                    k++;
+                }
+                while (i < n1) {
+                    array[k] = leftArray[i];
+                    bars[k].style.height = `${array[k]}px`;
+                    i++; k++;
+                }
+                while (j < n2) {
+                    array[k] = rightArray[j];
+                    bars[k].style.height = `${array[k]}px`;
+                    j++; k++;
+                }
+                if (left === 0 && right === array.length - 1) { finishSort(); }
+            }
+
+            // New Algorithms
+            async function heapSort() {
+                let n = array.length;
+                try {
+                    for (let i = Math.floor(n / 2) - 1; i >= 0; i--) { await heapify(n, i); }
+                    for (let i = n - 1; i > 0; i--) {
+                        updateVisualization([0, i], '#ef4444');
+                        await sleep(currentDelay);
+                        await swap(0, i);
+                        updateVisualization();
+                        markSorted(i);
+                        await heapify(i, 0);
+                    }
+                    markSorted(0);
+                    finishSort();
+                } catch (e) { console.error(e.message); }
+            }
+            async function heapify(n, i) {
+                let largest = i;
+                let left = 2 * i + 1;
+                let right = 2 * i + 2;
+                if (left < n && array[left] > array[largest]) { largest = left; }
+                if (right < n && array[right] > array[largest]) { largest = right; }
+                if (largest !== i) {
+                    updateVisualization([i, largest], '#f97316');
+                    await sleep(currentDelay);
+                    await swap(i, largest);
+                    updateVisualization();
+                    await heapify(n, largest);
+                }
+            }
+            async function gnomeSort() {
+                try {
+                    let index = 0;
+                    while (index < array.length) {
+                        if (index === 0) { index++; }
+                        comparisons++; statComparisons.textContent = comparisons;
+                        if (array[index] >= array[index - 1]) {
+                            updateVisualization([index - 1, index], '#10b981');
+                            await sleep(currentDelay);
+                            index++;
+                        } else {
+                            updateVisualization([index - 1, index], '#ef4444');
+                            await sleep(currentDelay);
+                            await swap(index, index - 1);
+                            index--;
+                        }
+                        updateVisualization();
+                    }
+                    finishSort();
+                } catch (e) { console.error(e.message); }
+            }
+            async function shakerSort() {
+                try {
+                    let swapped;
+                    do {
+                        swapped = false;
+                        for (let i = 0; i < array.length - 1; i++) {
+                            comparisons++; statComparisons.textContent = comparisons;
+                            updateVisualization([i, i + 1], '#ef4444'); await sleep(currentDelay);
+                            if (array[i] > array[i + 1]) { await swap(i, i + 1); swapped = true; }
+                            updateVisualization();
+                        }
+                        if (!swapped) break;
+                        swapped = false;
+                        for (let i = array.length - 2; i >= 0; i--) {
+                            comparisons++; statComparisons.textContent = comparisons;
+                            updateVisualization([i, i + 1], '#ef4444'); await sleep(currentDelay);
+                            if (array[i] > array[i + 1]) { await swap(i, i + 1); swapped = true; }
+                            updateVisualization();
+                        }
+                    } while (swapped);
+                    finishSort();
+                } catch (e) { console.error(e.message); }
+            }
+            async function oddEvenSort() {
+                try {
+                    let sorted = false;
+                    while (!sorted) {
+                        sorted = true;
+                        // Odd pass
+                        for (let i = 1; i < array.length - 1; i += 2) {
+                            comparisons++; statComparisons.textContent = comparisons;
+                            updateVisualization([i, i + 1], '#ef4444'); await sleep(currentDelay);
+                            if (array[i] > array[i + 1]) { await swap(i, i + 1); sorted = false; }
+                            updateVisualization();
+                        }
+                        // Even pass
+                        for (let i = 0; i < array.length - 1; i += 2) {
+                            comparisons++; statComparisons.textContent = comparisons;
+                            updateVisualization([i, i + 1], '#ef4444'); await sleep(currentDelay);
+                            if (array[i] > array[i + 1]) { await swap(i, i + 1); sorted = false; }
+                            updateVisualization();
+                        }
+                    }
+                    finishSort();
+                } catch (e) { console.error(e.message); }
+            }
+
+            window.onload = () => {
+                handleGenerateArray();
+                const initialAlgorithm = algorithmSelector.value;
+                const selectedData = algorithmData[initialAlgorithm];
+                statsPanel.classList.remove('hidden');
+                statAlgorithm.textContent = selectedData.name;
+                statTimeComplexity.textContent = selectedData.time;
+                statSpaceComplexity.textContent = selectedData.space;
+            };
+        })();
+    </script>
+</body>
+</html>
